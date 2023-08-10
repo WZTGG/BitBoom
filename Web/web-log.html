@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title>Web日志检测页面</title>
+        <!-- 添加Bootstrap和DataTables的CSS样式链接 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css">
+</head>
+        <!-- 引入jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var dataTable; // 全局变量用于存储DataTable实例
+     $(document).ready(function() {
+         dataTable = $('#web-log-table').DataTable({
+            columns: [
+                { "data": "id" },
+                { "data": "ip" },
+                { "data": "url" },
+                { "data": "class" },
+                { "data": "status_code" },
+                { "data": "time" }
+             ],
+            
+            // 设置语言为中文
+            "language": {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 条记录",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 条记录，共 _TOTAL_ 条",
+                "sInfoEmpty": "显示第 0 至 0 条记录，共 0 条",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索：",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                },
+                "buttons": {
+                    "copy": "复制",
+                    "colvis": "列可见"
+                }
+            }
+        });
+        switchTab('web-log');
+    });
+
+
+    function switchTab(tabName) {
+        
+        // 获取web日志标签页的数据并更新DataTable
+            $(".tab-content").hide();
+            $("#" + tabName).show();
+        // 根据当前标签页名调用对应的后端接口
+          if (tabName === "web-log") {
+            // 发送AJAX请求获取web日志数据并显示
+            $.get('http://127.0.0.1:5000/get_web_log', function(data) {
+               
+                // 根据data更新web日志页面内容
+                var tableBody = $('#web-log-table-body');
+                tableBody.empty(); // 清空原有内容
+                dataTable.clear();
+                for (var i = 0; i < data.length; i++) {
+                    var id = data[i].id;
+                    var ip = data[i].ip;
+                    var url = data[i].url;
+                    var class_ = data[i].class;
+                    var status_code = data[i].status_code;
+                    var times = data[i].time;
+                    var rowData = {'id': id,'ip': ip, 'class': class_, 'url': url, 'status_code': status_code,'time': times};
+                    var row = '<tr><td>' + id + '</td><td>' + ip + '</td><td>' + url + '</td><td>' + class_ + '</td><td>' + status_code + '</td><td>' + times + '</td></tr>';
+                    tableBody.append(row);
+
+                    dataTable.rows.add([rowData])
+                }
+                   dataTable.draw();
+            });
+        
+        }
+    }
+    
+    
+
+    // 定时刷新数据
+    setInterval(function() {
+        // 根据当前选中的标签页调用对应的后端接口更新数据
+        switchTab('web-log');
+    }, 120000);
+  
+</script>
+<body>
+    <div id="web-log" class="tab-content">
+        <table class="table table-striped" id="web-log-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>IP</th>
+                    <th>URL</th>
+                    <th>Class</th>
+                    <th>Status Code</th>
+                    <th>time</th>
+                </tr>
+            </thead>
+            <tbody id="web-log-table-body">
+                <!-- 这里会通过AJAX请求更新web日志数据 -->
+            </tbody>
+        </table>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
+    </div>
+</body>
+</html>

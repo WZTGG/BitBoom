@@ -1,0 +1,18 @@
+/opt/lampp/etc/php.ini
+disable_functions=
+allow_url_include=On
+
+/etc/my.cnf
+secure_file_priv=
+general_log = ON
+general_log_file = /var/log/mysql.log
+
+/opt/lampp/etc/httpd.conf
+    Options Indexes FollowSymLinks ExecCGI Includes
+    AllowOverride All
+    DirectoryIndex index.html index.html.var index.php index.php3 index.php4
+#ErrorDocument 500 "The server made a boo boo."
+#ErrorDocument 404 /missing.html
+#ErrorDocument 404 "/cgi-bin/missing_handler.pl"
+#ErrorDocument 402 http://www.example.com/subscription_info.html
+

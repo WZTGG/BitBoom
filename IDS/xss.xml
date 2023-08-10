@@ -1,0 +1,3 @@
+<Expressions>
+  <Expression>%3Cscript.+%3C|javascript:|\(%3Cscript.+%3C|javascript:|on.+=\).+\(document\.cookie|document\['cookie'\]|location\.href\)</Expression>
+</Expressions>

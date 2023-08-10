@@ -1,0 +1,3 @@
+<Expressions>
+  <Expression>/bash.*>.*/dev/tcp/|.+exec.*/dev/tcp/|.+/bin/bash.*|.*/bin/bash.*|/bin/.*|.*/dev.*|.*/tcp.*/i</Expression>
+</Expressions>

@@ -1,0 +1,3 @@
+<Expressions>
+  <Expression>file://|ftp://|php://|zlib://|data://|glob://|phar://|ssh2://|rar://ogg://|expect://|\.\./</Expression>
+</Expressions>

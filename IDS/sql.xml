@@ -1,0 +1,3 @@
+<Expressions>
+  <Expression>select.*|union.+select|updatexml.+concat|order.+by|and.+\S+.*=|infomation_schema|if\(length.*|SUBSTR.*|mid.*</Expression>
+</Expressions>

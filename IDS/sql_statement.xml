@@ -1,0 +1,3 @@
+<Expressions>
+  <Expression>show.+global.+variables|set.+global|TRUNCATE|drop.*database|create.*database|create.+user|drop.+user|revoke.+from|mysqldump</Expression>
+</Expressions>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>System Monitoring</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .system-info {
+            flex: 1;
+        }
+        .file-info {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左边显示系统信息 -->
+        <div class="system-info">
+            <h2>系统信息</h2>
+            <span id="sysinfo"></span>
+            <div>
+                <canvas id="cpuChart" width="300" height="300"></canvas>
+            </div>
+            <div>
+                <canvas id="memoryChart" width="300" height="300"></canvas>
+            </div>
+            <div>
+                <h2>端口开放 </h2>
+                <span id="portOpen"></span>
+                <h2>网络连接信息 </h2>
+                <span id="networkConnections"></span>
+            </div>
+        </div>
+
+        <!-- 右边显示文件信息 -->
+        <div class="file-info">
+            <h2>不安全配置内容</h2>
+            <pre id="fileContent"></pre>
+            <h2>显示危险函数文件路径: </h2>
+         <div id="filePath"></div>
+           <span></span>
+           <span></span>
+           <h2>服务器文件动态: </h2>
+           <div id="filechange"></div>
+        </div>
+    </div>
+
+    <script>
+        // 动态获取系统文件信息
+        function getFileInfo() {
+            // 使用jQuery的$.ajax方法向后台获取数据
+            $.ajax({
+                url: 'http://127.0.0.1:5000/get_file_info',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 显示不安全配置内容
+                    document.getElementById('fileContent').textContent = data.fileContent;
+                    // 显示危险函数文件路径
+                    document.getElementById('filePath').innerHTML = data.filePath.join('<br>');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching file info:', textStatus, errorThrown);
+                }
+            });
+        }
+
+        function getFilechange() {
+            // 使用jQuery的$.ajax方法向后台获取数据
+            $.ajax({
+                url: 'http://127.0.0.1:5000/get_file_change',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 显示文件动态
+                    document.getElementById('filechange').innerHTML = data.filechange.join('<br>');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching file info:', textStatus, errorThrown);
+                }
+            });
+        }
+
+        // 页面加载后调用getSystemInfo函数获取系统信息
+        $(document).ready(function() {
+            getSystemInfo();
+            getFileInfo();
+            getFilechange();
+        });
+
+        function getSystemInfo() {
+           // 使用jQuery的$.ajax方法向后台获取数据
+           $.ajax({
+                url: 'http://127.0.0.1:5000/get_system_info',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 显示CPU和内存的饼状图
+                    showCPUMemoryInfo(data.cpu, data.memory);
+                    // 显示系统信息
+                    document.getElementById('sysinfo').textContent = data.sysinfo;
+                    // 显示端口开放数和网络连接信息
+                    document.getElementById('portOpen').textContent = data.portOpen;
+                    document.getElementById('networkConnections').textContent = data.networkConnections.join('\n');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching system info:', textStatus, errorThrown);
+                }
+            });
+        }
+
+        // 显示CPU和内存的饼状图
+        function showCPUMemoryInfo(cpu, memory) {
+             // 绘制CPU使用率的饼状图
+            var cpuCtx = document.getElementById('cpuChart').getContext('2d');
+            var cpuChart = new Chart(cpuCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['已使用', '剩余'],
+                    datasets: [{
+                        label: 'CPU使用率',
+                        data: [cpu, 100 - cpu],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // 绘制内存使用率的饼状图
+            var memoryCtx = document.getElementById('memoryChart').getContext('2d');
+            var memoryChart = new Chart(memoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['已使用', '剩余'],
+                    datasets: [{
+                        label: '内存使用率',
+                        data: [memory, 100 - memory],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        
+
+        
+
+
+        // 页面加载完成后获取系统信息和文件信息
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     getSystemInfo();
+        //     getFileInfo();
+        // });
+    </script>
+</body>
+</html>

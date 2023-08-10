@@ -1,0 +1,2 @@
+/opt/lampp/htdocs/crm17/pop/2.php
+/opt/lampp/htdocs/crm17/pop/muma.php

@@ -1,0 +1,6 @@
+<Expressions>
+  <Expression>^allow_url_include=On|^disable_functions=\s*</Expression>
+  <Expression>^secure_file_priv=\s*|^general_log = ON|^general_log_file =\s*|skip-grant-tables=TRUE</Expression>
+  <Expression>^\s*Options Indexes FollowSymLinks ExecCGI Includes\s*$|^\s*AllowOverride All\s*$|^#ErrorDocument.*|^ErrorLog\s*$</Expression>
+  <Expression>^\s*DirectoryIndex index.html.*</Expression>
+</Expressions>

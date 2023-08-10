@@ -1,0 +1,3 @@
+<Expressions>
+  <Expression>filename\W+.+\.php\S+Content-Type</Expression>
+</Expressions>
